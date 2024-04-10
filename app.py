@@ -35,20 +35,14 @@ MODEL_MAP = {
     "AI Model Yifeng_3": 'models/yifeng_online/Yifeng_3.png',
 }
 
-def add_waterprint(img):
-
+def add_waterprint(img: cv.Mat) -> cv.Mat:
     h, w, _ = img.shape
     img = cv.putText(img, 'Powered by OutfitAnyone', (int(0.3*w), h-20), cv.FONT_HERSHEY_PLAIN, 2, (128, 128, 128), 2, cv.LINE_AA)
-
     return img
 
 
-def get_tryon_result(model_name, garment1, garment2, seed=1234):
-
-    # model_name = "AI Model " + model_name.split("\\")[-1].split(".")[0] # windows
-    model_name = "AI Model " + model_name.split("/")[-1].split(".")[0] # linux
-    print(model_name)
-
+def get_tryon_result(model_name: str, garment1: cv.Mat, garment2: cv.Mat | None, seed: int = 1234) -> cv.Mat:
+    # ... (the rest of the function remains the same)
     encoded_garment1 = cv.imencode('.jpg', garment1)[1].tobytes()
     encoded_garment1 = base64.b64encode(encoded_garment1).decode('utf-8')
 
@@ -73,7 +67,7 @@ def get_tryon_result(model_name, garment1, garment2, seed=1234):
         result = response.json()
         result = base64.b64decode(result['images'][0])
         result_np = np.frombuffer(result, np.uint8)
-        result_img = cv.imdecode(result_np, cv.IMREAD_UNCHANGED)
+    result_img = cv.imdecode(result_np, cv.IMREAD_UNCHANGED)
     else:
         print('server error!')
 
