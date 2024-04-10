@@ -42,7 +42,9 @@ def add_waterprint(img: cv.Mat) -> cv.Mat:
 
 
 def get_tryon_result(model_name: str, garment1: cv.Mat, garment2: cv.Mat | None, seed: int = 1234) -> cv.Mat:
-    # ... (the rest of the function remains the same)
+    # model_name = "AI Model " + model_name.split("\\")[-1].split(".")[0] # windows
+    model_name = "AI Model " + model_name.split("/")[-1].split(".")[0] # linux
+    print(model_name)
     encoded_garment1 = cv.imencode('.jpg', garment1)[1].tobytes()
     encoded_garment1 = base64.b64encode(encoded_garment1).decode('utf-8')
 
@@ -75,6 +77,11 @@ def get_tryon_result(model_name: str, garment1: cv.Mat, garment2: cv.Mat | None,
     final_img = add_waterprint(result_img)
 
     return final_img
+    '''result_img = cv.imread("placeholder.jpg")
+    
+    final_img = add_waterprint(result_img)
+
+    return final_img'''
 
 
 
