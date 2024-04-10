@@ -77,11 +77,14 @@ def get_tryon_result(model_name: str, garment1: cv.Mat, garment2: cv.Mat | None,
     final_img = add_waterprint(result_img)
 
     return final_img
-    '''result_img = cv.imread("placeholder.jpg")
     
-    final_img = add_waterprint(result_img)
+    '''height, width = 500, 500  # Adjust dimensions as needed
+    channels = 3  # 3 for RGB, 1 for grayscale
+    result_img = np.zeros((height, width, channels), dtype=np.uint8)
+    result_img[:] = (255, 0, 0)  # Set the image to solid blue color
 
-    return final_img'''
+    # final_img = add_waterprint(result_img)
+    return result_img'''
 
 
 
