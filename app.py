@@ -67,7 +67,7 @@ def get_tryon_result(model_name: str, garment1: cv.Mat, garment2: cv.Mat | None,
         result = response.json()
         result = base64.b64decode(result['images'][0])
         result_np = np.frombuffer(result, np.uint8)
-    result_img = cv.imdecode(result_np, cv.IMREAD_UNCHANGED)
+        result_img = cv.imdecode(result_np, cv.IMREAD_UNCHANGED)
     else:
         print('server error!')
 
@@ -99,7 +99,7 @@ with gr.Blocks(css = ".output-image, .input-image, .image-preview {height: 400px
         """)
     with gr.Row():
         with gr.Column():
-            init_image = gr.Image(sources='clipboard', type="filepath", label="model", value=model)
+            init_image = gr.Image(type="filepath", label="model", value=model)
             example = gr.Examples(inputs=init_image,
                                   examples_per_page=4,
                                   examples=[os.path.join(os.path.dirname(__file__), MODEL_MAP.get('AI Model Rouyan_0')),
@@ -128,24 +128,8 @@ with gr.Blocks(css = ".output-image, .input-image, .image-preview {height: 400px
                 </div>
                 """)
             with gr.Row():
-                garment_top = gr.Image(sources='upload', type="numpy", label="top garment")
-                example_top = gr.Examples(inputs=garment_top,
-                                          examples_per_page=5,
-                                          examples=[os.path.join(os.path.dirname(__file__), "garments/top222.JPG"),
-                                                    os.path.join(os.path.dirname(__file__), "garments/top5.png"),
-                                                    os.path.join(os.path.dirname(__file__), "garments/top333.png"),
-                                                    os.path.join(os.path.dirname(__file__), "garments/dress1.png"),
-                                                    os.path.join(os.path.dirname(__file__), "garments/dress2.png"),
-                                                            ])
-                garment_down = gr.Image(sources='upload', type="numpy", label="lower garment")
-                example_down = gr.Examples(inputs=garment_down,
-                                           examples_per_page=5,
-                                           examples=[os.path.join(os.path.dirname(__file__), "garments/bottom1.png"),
-                                                     os.path.join(os.path.dirname(__file__), "garments/bottom2.PNG"),
-                                                     os.path.join(os.path.dirname(__file__), "garments/bottom3.JPG"),
-                                                     os.path.join(os.path.dirname(__file__), "garments/bottom4.PNG"),
-                                                     os.path.join(os.path.dirname(__file__), "garments/bottom5.png"),
-                                                            ])
+                garment_top = gr.Image(type="numpy", label="top garment")
+                garment_down = gr.Image(type="numpy", label="lower garment")
 
             run_button = gr.Button(value="Run")
         with gr.Column():
@@ -153,13 +137,12 @@ with gr.Blocks(css = ".output-image, .input-image, .image-preview {height: 400px
 
             run_button.click(fn=get_tryon_result, 
                              inputs=[
-                                    init_image,
-                                    garment_top,
-                                    garment_down,
-                                    ], 
+                                init_image,
+                                garment_top,
+                                garment_down,
+                             ], 
                              outputs=[gallery],
-                             concurrency_limit=2)
-        
+                             show_progress=True)
 
     # Examples
     gr.Markdown("## Examples")
@@ -181,5 +164,4 @@ if __name__ == "__main__":
     ip = requests.get('http://ifconfig.me/ip', timeout=1).text.strip()
     print("ip address alibaba", ip)
     demo.queue(max_size=10)
-    demo.launch()
-
+    demo.launch(share=True)
