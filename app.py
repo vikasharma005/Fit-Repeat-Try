@@ -1,5 +1,5 @@
 import os
-import cv2
+import cv2 as cv
 import numpy as np
 import json
 import random
@@ -38,7 +38,7 @@ MODEL_MAP = {
 def add_waterprint(img):
 
     h, w, _ = img.shape
-    img = cv2.putText(img, 'Powered by OutfitAnyone', (int(0.3*w), h-20), cv2.FONT_HERSHEY_PLAIN, 2, (128, 128, 128), 2, cv2.LINE_AA)
+    img = cv.putText(img, 'Powered by OutfitAnyone', (int(0.3*w), h-20), cv.FONT_HERSHEY_PLAIN, 2, (128, 128, 128), 2, cv.LINE_AA)
 
     return img
 
@@ -49,11 +49,11 @@ def get_tryon_result(model_name, garment1, garment2, seed=1234):
     model_name = "AI Model " + model_name.split("/")[-1].split(".")[0] # linux
     print(model_name)
 
-    encoded_garment1 = cv2.imencode('.jpg', garment1)[1].tobytes()
+    encoded_garment1 = cv.imencode('.jpg', garment1)[1].tobytes()
     encoded_garment1 = base64.b64encode(encoded_garment1).decode('utf-8')
 
     if garment2 is not None:
-        encoded_garment2 = cv2.imencode('.jpg', garment2)[1].tobytes()
+        encoded_garment2 = cv.imencode('.jpg', garment2)[1].tobytes()
         encoded_garment2 = base64.b64encode(encoded_garment2).decode('utf-8')
     else:
         encoded_garment2 = ''
@@ -73,7 +73,7 @@ def get_tryon_result(model_name, garment1, garment2, seed=1234):
         result = response.json()
         result = base64.b64decode(result['images'][0])
         result_np = np.frombuffer(result, np.uint8)
-        result_img = cv2.imdecode(result_np, cv2.IMREAD_UNCHANGED)
+        result_img = cv.imdecode(result_np, cv.IMREAD_UNCHANGED)
     else:
         print('server error!')
 
